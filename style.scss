@@ -1,19 +1,98 @@
+:root {
+  --primary: #D97D55;
+  --secondary: #F4E9D7;
+  --tertiary: #B8C4A9;
+  --accent: #6FA4AF;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
 }
-@mixin WH(){
-    width: 100%;
+
+// Mixin
+@mixin full-size {
+  width: 100%;
   height: 100%;
 }
-main{
-    @include WH();
-    background-color: black;
-    color: white;
+
+main {
+  @include full-size;
+  background-color: var(--primary);
+  color: var(--primary);
+
+  nav {
+    height: 4rem;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--secondary);
+    z-index: 10;
+  }
+
+  // Card Grid Section
+  section.all-elements {
+    padding-top: 4rem;
+    background-color: var(--tertiary);
+    @include full-size;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 6rem 2rem 2rem;
+
+    .element {
+      position: relative;
+      background-color: var(--accent);
+      height: 300px;
+      width: 200px;
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      h1 {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 2;
+        color: #fff;
+        font-size: 1.1rem;
+      }
+
+      img {
+        @include full-size;
+        object-fit: cover;
+        border-radius: 1rem;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  // Full View Sections
+  section.full-element {
+    @include full-size;
+    background-color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1,
+    h2 {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+  }
 }

@@ -49,7 +49,8 @@ main {
     flex-wrap: wrap;
     gap: 2rem;
     padding: 6rem 2rem 2rem;
-
+    position: absolute;
+   
     .element {
       position: relative;
       background-color: var(--accent);
@@ -73,6 +74,7 @@ main {
         @include full-size;
         object-fit: cover;
         border-radius: 1rem;
+        // pointer-events: none;
       }
 
       &:active {
@@ -88,7 +90,9 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-
+    display: none;
+    position: absolute;
+     z-index: 5;
     h1,
     h2 {
       font-size: 2rem;

@@ -42,6 +42,7 @@ main section.all-elements {
   flex-wrap: wrap;
   gap: 2rem;
   padding: 6rem 2rem 2rem;
+  position: absolute;
 }
 main section.all-elements .element {
   position: relative;
@@ -78,6 +79,9 @@ main section.full-element {
   display: flex;
   align-items: center;
   justify-content: center;
+  display: none;
+  position: absolute;
+  z-index: 5;
 }
 main section.full-element h1,
 main section.full-element h2 {

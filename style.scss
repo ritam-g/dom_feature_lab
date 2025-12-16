@@ -46,6 +46,7 @@ main {
     @include full-size;
 
     display: flex;
+    // display: none;
     flex-wrap: wrap;
     gap: 2rem;
     padding: 6rem 2rem 2rem;
@@ -91,8 +92,22 @@ main {
     align-items: center;
     justify-content: center;
     display: none;
+    
     position: absolute;
      z-index: 5;
+     button{
+      position: absolute;
+      background-color: red;
+      right: 100px;
+      top: 4rem;
+      padding: 1rem 1rem;
+      i{
+        font-size: 1.5rem;
+      }
+     }
+     button:active{
+      scale: 0.9;
+     }
     h1,
     h2 {
       font-size: 2rem;

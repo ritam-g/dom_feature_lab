@@ -83,6 +83,19 @@ main section.full-element {
   position: absolute;
   z-index: 5;
 }
+main section.full-element button {
+  position: absolute;
+  background-color: red;
+  right: 100px;
+  top: 4rem;
+  padding: 1rem 1rem;
+}
+main section.full-element button i {
+  font-size: 1.5rem;
+}
+main section.full-element button:active {
+  scale: 0.9;
+}
 main section.full-element h1,
 main section.full-element h2 {
   font-size: 2rem;

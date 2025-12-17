@@ -3,6 +3,7 @@
   --secondary: #F4E9D7;
   --tertiary: #B8C4A9;
   --accent: #6FA4AF;
+  --dark: #2c3e50;
 }
 
 * {
@@ -12,92 +13,189 @@
   font-family: "Courier New", Courier, monospace;
 }
 
-html,
 body {
-  width: 100%;
-  height: 100%;
+  background-color: var(--primary);
 }
 
 main {
   width: 100%;
   height: 100%;
-  background-color: var(--primary);
-  color: var(--primary);
-}
-main nav {
-  height: 4rem;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: var(--secondary);
-  z-index: 10;
+  position: relative;
 }
 main section.all-elements {
-  padding-top: 4rem;
-  background-color: var(--tertiary);
   width: 100%;
   height: 100%;
+  background-color: var(--tertiary);
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  padding: 6rem 2rem 2rem;
-  position: absolute;
+  padding: 4rem 2rem;
+  justify-content: center;
 }
 main section.all-elements .element {
   position: relative;
   background-color: var(--accent);
   height: 300px;
-  width: 200px;
-  border-radius: 1rem;
+  width: 220px;
+  border-radius: 1.5rem;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 main section.all-elements .element h1 {
   position: absolute;
-  top: 1rem;
+  top: 1.5rem;
   left: 1rem;
   z-index: 2;
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 main section.all-elements .element img {
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
-  border-radius: 1rem;
+  filter: brightness(0.8);
+  transition: 0.3s;
 }
-main section.all-elements .element:active {
-  transform: scale(0.95);
+main section.all-elements .element:hover {
+  transform: translateY(-10px);
+}
+main section.all-elements .element:hover img {
+  filter: brightness(1);
 }
 main section.full-element {
   width: 100%;
   height: 100%;
   background-color: var(--secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   display: none;
   position: absolute;
-  z-index: 5;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 2rem;
 }
-main section.full-element button {
+main section.full-element #cross {
   position: absolute;
-  background-color: red;
-  right: 100px;
-  top: 4rem;
-  padding: 1rem 1rem;
-}
-main section.full-element button i {
+  top: 2rem;
+  right: 2rem;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 50%;
+  cursor: pointer;
   font-size: 1.5rem;
+  transition: 0.2s;
+  z-index: 20;
 }
-main section.full-element button:active {
-  scale: 0.9;
+main section.full-element #cross:hover {
+  transform: rotate(90deg);
+  background-color: #c0392b;
 }
-main section.full-element h1,
-main section.full-element h2 {
-  font-size: 2rem;
-  color: var(--primary);
+main .todo-list-fullpage h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--dark);
+}
+main .todo-list-fullpage .contaner {
+  display: flex;
+  height: 80vh;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+main .todo-list-fullpage .contaner .left {
+  flex: 1;
+  background: var(--tertiary);
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+main .todo-list-fullpage .contaner .left form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+main .todo-list-fullpage .contaner .left form input, main .todo-list-fullpage .contaner .left form textarea {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 2px solid transparent;
+  font-size: 1.1rem;
+  outline: none;
+  background: var(--secondary);
+}
+main .todo-list-fullpage .contaner .left form input:focus, main .todo-list-fullpage .contaner .left form textarea:focus {
+  border-color: var(--primary);
+}
+main .todo-list-fullpage .contaner .left form button {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+main .todo-list-fullpage .contaner .left form button:hover {
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+main .todo-list-fullpage .contaner .right {
+  flex: 2;
+  background: var(--tertiary);
+  border-radius: 2rem;
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+main .todo-list-fullpage .contaner .right .task {
+  background: var(--secondary);
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideIn 0.3s ease;
+}
+main .todo-list-fullpage .contaner .right .task .task-info h2 {
+  font-size: 1.3rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+main .todo-list-fullpage .contaner .right .task .task-info p {
+  font-size: 1rem;
+  color: #666;
+}
+main .todo-list-fullpage .contaner .right .task button {
+  background: transparent;
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+main .todo-list-fullpage .contaner .right .task button:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }/*# sourceMappingURL=style.css.map */

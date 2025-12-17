@@ -12,7 +12,7 @@
 </head>
 <body>
     <main>
-        <nav></nav>
+        <!-- <nav></nav> -->
 
         <section class="all-elements">
             <div class="todo element " id="0">
@@ -40,32 +40,44 @@
             </div>
         </section>
 
-        <section class="full-element">
-            <button><i class="ri-close-large-fill"></i></button>
-            <h1>Todo</h1>
+        <section class="full-element todo-list-fullpage">
+            <button id="cross"><i class="ri-close-large-fill"></i></button>
+            <h1>Plan your task today</h1>
+            <div class="contaner">
+                <div class="left">
+                    <form >
+                        <input type="text" placeholder="enter your task" value="task">
+                        <textarea name="task-details" id="" placeholder="enter your task details"></textarea>
+                        <button>Add Task</button>
+                    </form>
+                </div>
+                <div class="right">
+                    
+                </div>
+            </div>
         </section>
 
-        <section class="full-element">
-             <button><i class="ri-close-large-fill"></i></button>
+        <section class="full-element daily-planner-fullpage">
+             <button id="cross"><i class="ri-close-large-fill"></i></button>
            
             <h2>Daily Planner</h2>
         </section>
 
-        <section class="full-element">
-             <button><i class="ri-close-large-fill"></i></button>
+        <section class="full-element  motivational-quotes-fullpage">
+             <button id="cross"><i class="ri-close-large-fill"></i></button>
            
             <h1>Motivational Quotes</h1>
         </section>
 
-        <section class="full-element">
-             <button><i class="ri-close-large-fill"></i></button>
+        <section class="full-element  pomodoro-time-fulpage">
+             <button id="cross"><i class="ri-close-large-fill"></i></button>
            
             <h1>Pomodoro</h1>
         </section>
         <section class="Daily-goals full-element">
-                 <button><i class="ri-close-large-fill"></i></button>
+                 <button id="cross"><i class="ri-close-large-fill"></i></button>
            <h1>DailyGoals</h1>
-                </section>
+        </section>
     </main>
 
     <script src="script.js"></script>

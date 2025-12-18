@@ -1,323 +1,394 @@
+// Function to open and close full-page features
 function openFeatures() {
-    var allElems = document.querySelectorAll('.elem')
-    var fullElemPage = document.querySelectorAll('.fullElem')
-    var fullElemPageBackBtn = document.querySelectorAll('.fullElem .back')
+    const allElems = document.querySelectorAll('.elem');
+    const fullElemPage = document.querySelectorAll('.fullElem');
+    const fullElemPageBackBtn = document.querySelectorAll('.fullElem .back');
 
     allElems.forEach(function (elem) {
         elem.addEventListener('click', function () {
-            fullElemPage[elem.id].style.display = 'block'
-        })
-    })
+            fullElemPage[elem.id].style.display = 'block';
+        });
+    });
 
     fullElemPageBackBtn.forEach(function (back) {
         back.addEventListener('click', function () {
-            fullElemPage[back.id].style.display = 'none'
-        })
-    })
+            fullElemPage[back.id].style.display = 'none';
+        });
+    });
 }
 
-openFeatures()
+openFeatures();
 
 
+// --- To Do List Feature ---
 function todoList() {
+    let currentTask = JSON.parse(localStorage.getItem('currentTask')) || [];
 
-    var currentTask = []
-
-    if (localStorage.getItem('currentTask')) {
-        currentTask = JSON.parse(localStorage.getItem('currentTask'))
-    } else {
-        console.log('Task list is Empty');
-    }
-
-
+    const allTaskContainer = document.querySelector('.allTask');
+    const form = document.getElementById('todo-form');
+    const taskInput = document.getElementById('task-input');
+    const taskDetailsInput = document.getElementById('task-details-input');
+    const taskCheckbox = document.getElementById('check');
 
     function renderTask() {
-
-        var allTask = document.querySelector('.allTask')
-
-        var sum = ''
-
+        let sum = '';
         currentTask.forEach(function (elem, idx) {
-            sum = sum + `<div class="task">
-        <h5>${elem.task} <span class=${elem.imp}>imp</span></h5>
-        <button id=${idx}>Mark as Completed</button>
-        </div>`
-        })
+            sum += `<div class="task">
+                        <h5>${elem.task} <span class=${elem.imp}>IMPORTANT</span></h5>
+                        <button id=${idx}>Mark as Completed</button>
+                    </div>`;
+        });
 
-        allTask.innerHTML = sum
+        allTaskContainer.innerHTML = sum;
+        localStorage.setItem('currentTask', JSON.stringify(currentTask));
 
-        localStorage.setItem('currentTask', JSON.stringify(currentTask))
-
+        // Add event listeners to the new buttons
         document.querySelectorAll('.task button').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                currentTask.splice(btn.id, 1)
-                renderTask()
-            })
-        })
+                // Optional: Show detail alert before deleting
+                // alert(`Task: ${currentTask[btn.id].task}\nDetails: ${currentTask[btn.id].details}`);
+                currentTask.splice(parseInt(btn.id), 1);
+                renderTask();
+            });
+        });
     }
-    renderTask()
-
-    let form = document.querySelector('.addTask form')
-    let taskInput = document.querySelector('.addTask form #task-input')
-    let taskDetailsInput = document.querySelector('.addTask form textarea')
-    let taskCheckbox = document.querySelector('.addTask form #check')
+    
+    // Initial render
+    renderTask();
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault()
-        currentTask.push(
-            {
-                task: taskInput.value,
-                details: taskDetailsInput.value,
-                imp: taskCheckbox.checked
-            }
-        )
-        renderTask()
+        e.preventDefault();
+        if (taskInput.value.trim() === '') return;
 
-        taskCheckbox.checked = false
-        taskInput.value = ''
-        taskDetailsInput.value = ''
-    })
+        currentTask.push({
+            task: taskInput.value,
+            details: taskDetailsInput.value,
+            imp: taskCheckbox.checked,
+        });
+        renderTask();
 
-
-
+        // Reset form inputs
+        taskCheckbox.checked = false;
+        taskInput.value = '';
+        taskDetailsInput.value = '';
+    });
 }
 
-todoList()
+todoList();
 
 
+// --- Daily Planner Feature ---
 function dailyPlanner() {
-    var dayPlanner = document.querySelector('.day-planner')
-
-    var dayPlanData = JSON.parse(localStorage.getItem('dayPlanData')) || {}
-
-    var hours = Array.from({ length: 18 }, (_, idx) => `${6 + idx}:00 - ${7 + idx}:00`)
-
-
-    var wholeDaySum = ''
+    const dayPlanner = document.querySelector('.day-planner');
+    const dayPlanData = JSON.parse(localStorage.getItem('dayPlanData')) || {};
+    
+    // Planner from 6:00 to 23:00 (18 hours)
+    const hours = Array.from({ length: 18 }, (_, idx) => `${String(6 + idx).padStart(2, '0')}:00 - ${String(7 + idx).padStart(2, '0')}:00`);
+    
+    let wholeDaySum = '';
     hours.forEach(function (elem, idx) {
+        const savedData = dayPlanData[idx] || '';
 
-        var savedData = dayPlanData[idx] || ''
+        wholeDaySum += `<div class="day-planner-time">
+                            <p>${elem}</p>
+                            <input id=${idx} type="text" placeholder="What are you planning?" value="${savedData}">
+                        </div>`;
+    });
 
-        wholeDaySum = wholeDaySum + `<div class="day-planner-time">
-    <p>${elem}</p>
-    <input id=${idx} type="text" placeholder="..." value=${savedData}>
-</div>`
-    })
+    dayPlanner.innerHTML = wholeDaySum;
 
-    dayPlanner.innerHTML = wholeDaySum
-
-
-    var dayPlannerInput = document.querySelectorAll('.day-planner input')
+    const dayPlannerInput = document.querySelectorAll('.day-planner input');
 
     dayPlannerInput.forEach(function (elem) {
         elem.addEventListener('input', function () {
-            console.log('hello');
-            dayPlanData[elem.id] = elem.value
-
-            localStorage.setItem('dayPlanData', JSON.stringify(dayPlanData))
-        })
-    })
+            // Save data to the object on input change
+            dayPlanData[elem.id] = elem.value;
+            // Update Local Storage
+            localStorage.setItem('dayPlanData', JSON.stringify(dayPlanData));
+        });
+    });
 }
 
-dailyPlanner()
+dailyPlanner();
 
 
+// --- Motivational Quote Feature ---
 function motivationalQuote() {
-    var motivationQuoteContent = document.querySelector('.motivation-2 h1')
-    var motivationAuthor = document.querySelector('.motivation-3 h2')
+    const motivationQuoteContent = document.getElementById('quote-content');
+    const motivationAuthor = document.getElementById('quote-author');
 
     async function fetchQuote() {
-        let response = await fetch('https://api.quotable.io/random')
-        let data = await response.json()
+        try {
+            let response = await fetch('https://api.quotable.io/random');
+            let data = await response.json();
 
-        motivationQuoteContent.innerHTML = data.content
-        motivationAuthor.innerHTML = data.author
+            motivationQuoteContent.innerHTML = data.content;
+            motivationAuthor.innerHTML = data.author;
+        } catch (error) {
+            console.error("Error fetching quote:", error);
+            motivationQuoteContent.innerHTML = "Productivity is being able to do things you were never able to do before.";
+            motivationAuthor.innerHTML = "Frank Kafka";
+        }
     }
 
-    fetchQuote()
+    fetchQuote();
 }
 
-motivationalQuote()
+motivationalQuote();
 
 
+// --- Pomodoro Timer Feature (Fixed to 1-second interval) ---
 function pomodoroTimer() {
+    const timerDisplay = document.querySelector('.pomo-timer h1');
+    const startBtn = document.querySelector('.pomo-timer .start-timer');
+    const pauseBtn = document.querySelector('.pomo-timer .pause-timer');
+    const resetBtn = document.querySelector('.pomo-timer .reset-timer');
+    const sessionDisplay = document.querySelector('.pomodoro-fullpage .session');
+    
+    let isWorkSession = true;
+    let totalSeconds = 25 * 60; // Start with 25 minutes
+    let timerInterval = null;
 
+    function updateTimerDisplay() {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        timerDisplay.innerHTML = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
 
-    let timer = document.querySelector('.pomo-timer h1')
-    var startBtn = document.querySelector('.pomo-timer .start-timer')
-    var pauseBtn = document.querySelector('.pomo-timer .pause-timer')
-    var resetBtn = document.querySelector('.pomo-timer .reset-timer')
-    var session = document.querySelector('.pomodoro-fullpage .session')
-    var isWorkSession = true
-
-    let totalSeconds = 25 * 60
-    let timerInterval = null
-
-    function updateTimer() {
-        let minutes = Math.floor(totalSeconds / 60)
-        let seconds = totalSeconds % 60
-
-        timer.innerHTML = `${String(minutes).padStart('2', '0')}:${String(seconds).padStart('2', '0')}`
+    function countdown() {
+        if (totalSeconds > 0) {
+            totalSeconds--;
+            updateTimerDisplay();
+            timerInterval = setTimeout(countdown, 1000); // 1-second interval
+        } else {
+            clearInterval(timerInterval);
+            isWorkSession = !isWorkSession; // Toggle session type
+            
+            if (isWorkSession) {
+                // Break is over, start new work session
+                totalSeconds = 25 * 60;
+                sessionDisplay.innerHTML = 'Work Session';
+                sessionDisplay.style.backgroundColor = 'var(--green)';
+            } else {
+                // Work is over, start break
+                totalSeconds = 5 * 60;
+                sessionDisplay.innerHTML = 'Take a Break';
+                sessionDisplay.style.backgroundColor = 'var(--blue)';
+            }
+            updateTimerDisplay();
+            // Optionally auto-start next session
+            // startTimer();
+        }
     }
 
     function startTimer() {
-        clearInterval(timerInterval)
-
-        if (isWorkSession) {
-
-            timerInterval = setInterval(function () {
-                if (totalSeconds > 0) {
-                    totalSeconds--
-                    updateTimer()
-                } else {
-                    isWorkSession = false
-                    clearInterval(timerInterval)
-                    timer.innerHTML = '05:00'
-                    session.innerHTML = 'Take a Break'
-                    session.style.backgroundColor = 'var(--blue)'
-                    totalSeconds = 5 * 60
-                }
-            }, 10)
-        } else {
-
-
-            timerInterval = setInterval(function () {
-                if (totalSeconds > 0) {
-                    totalSeconds--
-                    updateTimer()
-                } else {
-                    isWorkSession = true
-                    clearInterval(timerInterval)
-                    timer.innerHTML = '25:00'
-                    session.innerHTML = 'Work Session'
-                    session.style.backgroundColor = 'var(--green)'
-                    totalSeconds = 25 * 60
-                }
-            }, 10)
-        }
-
+        if (timerInterval) return; // Prevent multiple intervals
+        startBtn.style.backgroundColor = 'var(--tri2)';
+        startBtn.style.color = 'var(--pri)';
+        countdown();
     }
 
     function pauseTimer() {
-        clearInterval(timerInterval)
+        clearTimeout(timerInterval);
+        timerInterval = null;
+        startBtn.style.backgroundColor = 'var(--green)';
+        startBtn.style.color = 'var(--sec)';
     }
+
     function resetTimer() {
-        totalSeconds = 25 * 60
-        clearInterval(timerInterval)
-        updateTimer()
-
+        pauseTimer();
+        isWorkSession = true;
+        totalSeconds = 25 * 60;
+        sessionDisplay.innerHTML = 'Work Session';
+        sessionDisplay.style.backgroundColor = 'var(--green)';
+        updateTimerDisplay();
     }
-    startBtn.addEventListener('click', startTimer)
-    pauseBtn.addEventListener('click', pauseTimer)
-    resetBtn.addEventListener('click', resetTimer)
 
-
-
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
 }
 
-pomodoroTimer()
+pomodoroTimer();
 
 
-
+// --- Weather and Time/Date Feature ---
 function weatherFunctionality() {
+    // API key removed for security purposes. Use a valid key to make this work.
+    const apiKey = 'YOUR_WEATHER_API_KEY'; // Replace with a real key
+    const city = 'Bhopal'; // Customizable city
 
+    const header1Time = document.getElementById('current-time');
+    const header1Date = document.getElementById('current-date');
+    const header2Temp = document.getElementById('weather-temp');
+    const header2Condition = document.getElementById('weather-condition');
+    const precipitationElem = document.querySelector('.header2 .precipitation');
+    const humidityElem = document.querySelector('.header2 .humidity');
+    const windElem = document.querySelector('.header2 .wind');
+    const weatherIcon = document.getElementById('weather-icon');
 
-    // I have removed API key for security purpose
-    var apiKey = null
-    var city = 'Bhopal'
-
-
-
-    var header1Time = document.querySelector('.header1 h1')
-    var header1Date = document.querySelector('.header1 h2')
-    var header2Temp = document.querySelector('.header2 h2')
-    var header2Condition = document.querySelector('.header2 h4')
-    var precipitation = document.querySelector('.header2 .precipitation')
-    var humidity = document.querySelector('.header2 .humidity')
-    var wind = document.querySelector('.header2 .wind')
-
-    var data = null
-
-    async function weatherAPICall() {
-        var response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`)
-        data = await response.json()
-
-        header2Temp.innerHTML = `${data.current.temp_c}°C`
-        header2Condition.innerHTML = `${data.current.condition.text}`
-        wind.innerHTML = `Wind: ${data.current.wind_kph} km/h`
-        humidity.innerHTML = `Humidity: ${data.current.humidity}%`
-        precipitation.innerHTML = `Heat Index : ${data.current.heatindex_c}%`
+    function getWeatherIcon(conditionText) {
+        const text = conditionText.toLowerCase();
+        if (text.includes('sun') || text.includes('clear')) return 'ri-sun-fill';
+        if (text.includes('rain') || text.includes('drizzle')) return 'ri-showers-line';
+        if (text.includes('cloud') || text.includes('overcast')) return 'ri-cloudy-line';
+        if (text.includes('snow') || text.includes('sleet')) return 'ri-snowy-line';
+        if (text.includes('storm') || text.includes('thunder')) return 'ri-thunderstorm-line';
+        return 'ri-question-fill'; // Default icon
     }
 
-    weatherAPICall()
+    async function weatherAPICall() {
+        if (!apiKey || apiKey === 'YOUR_WEATHER_API_KEY') {
+            console.error("Please provide a valid API key for weather functionality.");
+            return;
+        }
+        
+        try {
+            const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`);
+            const data = await response.json();
 
+            header2Temp.innerHTML = `${data.current.temp_c}°C`;
+            header2Condition.innerHTML = `${data.current.condition.text}`;
+            windElem.innerHTML = `Wind: ${data.current.wind_kph} km/h`;
+            humidityElem.innerHTML = `Humidity: ${data.current.humidity}%`;
+            precipitationElem.innerHTML = `Precipitation: ${data.current.precip_mm} mm`; // Use actual precipitation data
+            
+            // Update icon
+            weatherIcon.className = getWeatherIcon(data.current.condition.text);
+
+        } catch (error) {
+            console.error("Failed to fetch weather data:", error);
+            // Fallback data
+            header2Temp.innerHTML = `20°C`;
+            header2Condition.innerHTML = `Light rain`;
+            weatherIcon.className = getWeatherIcon('Light rain');
+        }
+    }
+
+    weatherAPICall(); // Call once on load
 
     function timeDate() {
         const totalDaysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        const date = new Date();
+        const dayOfWeek = totalDaysOfWeek[date.getDay()];
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const tarik = date.getDate();
+        const month = monthNames[date.getMonth()];
+        const year = date.getFullYear();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
 
-        const monthNames = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-        var date = new Date()
-        var dayOfWeek = totalDaysOfWeek[date.getDay()]
-        var hours = date.getHours()
-        var minutes = date.getMinutes()
-        var seconds = date.getSeconds()
-        var tarik = date.getDate()
-        var month = monthNames[date.getMonth()]
-        var year = date.getFullYear()
+        hours = hours % 12;
+        hours = hours ? hours : 12; // The hour '0' should be '12'
 
-        header1Date.innerHTML = `${tarik} ${month}, ${year}`
-
-        if (hours > 12) {
-            header1Time.innerHTML = `${dayOfWeek}, ${String(hours - 12).padStart('2', '0')}:${String(minutes).padStart('2', '0')}:${String(seconds).padStart('2', '0')} PM`
-
-        } else {
-            header1Time.innerHTML = `${dayOfWeek}, ${String(hours).padStart('2', '0')}:${String(minutes).padStart('2', '0')}:${String(seconds).padStart('2', '0')} AM`
-        }
+        header1Date.innerHTML = `${tarik} ${month}, ${year}`;
+        header1Time.innerHTML = `${dayOfWeek}, ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${ampm}`;
     }
 
-    setInterval(() => {
-        timeDate()
-    }, 1000);
-
+    // Update time/date every second
+    setInterval(timeDate, 1000);
 }
 
-weatherFunctionality()
+weatherFunctionality();
 
 
+// --- Daily Goals Feature (New) ---
+function dailyGoals() {
+    let currentGoals = JSON.parse(localStorage.getItem('currentGoals')) || [];
+    const goalForm = document.getElementById('goal-form');
+    const goalInput = document.getElementById('goal-input');
+    const allGoalsContainer = document.querySelector('.allGoals');
+
+    function renderGoals() {
+        let sum = '';
+        currentGoals.forEach(function (goal, idx) {
+            const completedClass = goal.completed ? 'completed' : '';
+            sum += `<div class="goal-item ${completedClass}">
+                        <p>${goal.text}</p>
+                        <div class="goal-actions">
+                            <button class="complete-btn" id="c-${idx}">${goal.completed ? 'Undo' : 'Complete'}</button>
+                            <button class="delete-btn" id="d-${idx}">Delete</button>
+                        </div>
+                    </div>`;
+        });
+
+        allGoalsContainer.innerHTML = sum;
+        localStorage.setItem('currentGoals', JSON.stringify(currentGoals));
+
+        // Add event listeners
+        document.querySelectorAll('.complete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(btn.id.split('-')[1]);
+                currentGoals[idx].completed = !currentGoals[idx].completed;
+                renderGoals();
+            });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(btn.id.split('-')[1]);
+                currentGoals.splice(idx, 1);
+                renderGoals();
+            });
+        });
+    }
+
+    renderGoals();
+
+    goalForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (goalInput.value.trim() === '') return;
+
+        currentGoals.push({
+            text: goalInput.value.trim(),
+            completed: false
+        });
+
+        goalInput.value = '';
+        renderGoals();
+    });
+}
+
+dailyGoals();
+
+
+// --- Theme Changer Feature ---
 function changeTheme() {
+    const themeButton = document.querySelector('.theme');
+    const rootElement = document.documentElement;
+    
+    // Default theme 0 (dark blue/slate/white)
+    const themes = [
+        // Theme 1: Original Brown/Yellowish
+        { pri: '#F8F4E1', sec: '#381c0a', tri1: '#FEBA17', tri2: '#74512D' },
+        // Theme 2: User's second set (Darker/Blue-Black)
+        { pri: '#F1EFEC', sec: '#030303', tri1: '#D4C9BE', tri2: '#123458' },
+        // Theme 3: Current Default (Clean/Modern)
+        { pri: '#F1EFEC', sec: '#030303', tri1: '#2196F3', tri2: '#34495E' }
+    ];
 
-    var theme = document.querySelector('.theme')
-    var rootElement = document.documentElement
+    let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 2; // Default to 2 (Modern)
 
-    var flag = 0
-    theme.addEventListener('click', function () {
+    function applyTheme(index) {
+        const theme = themes[index];
+        rootElement.style.setProperty('--pri', theme.pri);
+        rootElement.style.setProperty('--sec', theme.sec);
+        rootElement.style.setProperty('--tri1', theme.tri1);
+        rootElement.style.setProperty('--tri2', theme.tri2);
+        localStorage.setItem('themeIndex', index);
+        currentThemeIndex = index;
+    }
+    
+    // Apply initial theme on load
+    applyTheme(currentThemeIndex);
 
-        if (flag == 0) {
-            rootElement.style.setProperty('--pri', '#F8F4E1')
-            rootElement.style.setProperty('--sec', '#222831')
-            rootElement.style.setProperty('--tri1', '#948979')
-            rootElement.style.setProperty('--tri2', '#393E46')
-            flag = 1
-        } else if (flag == 1) {
-            rootElement.style.setProperty('--pri', '#F1EFEC')
-            rootElement.style.setProperty('--sec', '#030303')
-            rootElement.style.setProperty('--tri1', '#D4C9BE')
-            rootElement.style.setProperty('--tri2', '#123458')
-            flag = 2
-        } else if (flag == 2) {
-            rootElement.style.setProperty('--pri', '#F8F4E1')
-            rootElement.style.setProperty('--sec', '#381c0a')
-            rootElement.style.setProperty('--tri1', '#FEBA17')
-            rootElement.style.setProperty('--tri2', '#74512D')
-            flag = 0
-        }
-
-    })
-
-
+    themeButton.addEventListener('click', function () {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        applyTheme(currentThemeIndex);
+    });
 }
 
-changeTheme()
+changeTheme();

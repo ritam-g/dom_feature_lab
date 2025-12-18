@@ -387,7 +387,9 @@ function changeTheme() {
 
     themeButton.addEventListener('click', function () {
         currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        //! theme applied 
         applyTheme(currentThemeIndex);
+        
     });
 }
 
